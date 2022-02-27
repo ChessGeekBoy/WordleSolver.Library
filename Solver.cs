@@ -8,11 +8,11 @@ using System.IO;
 
 namespace WordleSolver.Library
 {
-    public class WordleSolver
+    public class Solver
     {
         public IEnumerable<string> Possibilities { get; set; }
 
-        public WordleSolver(string jsonFilePath)
+        public Solver(string jsonFilePath)
         {
             string json = File.ReadAllText(jsonFilePath);
             this.Possibilities = JsonSerializer.Deserialize<IEnumerable<string>>(json);
