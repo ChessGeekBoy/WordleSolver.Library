@@ -10,12 +10,19 @@ namespace WordleSolver.Library
 {
     public class Solver
     {
-        public IEnumerable<string> Possibilities { get; set; }
+        public List<string> Possibilities { get; set; }
 
-        public Solver(string jsonFilePath)
+        public Solver(string wordFilePath)
         {
-            string json = File.ReadAllText(jsonFilePath);
-            this.Possibilities = JsonSerializer.Deserialize<IEnumerable<string>>(json);
+            Possibilities = new List<string>();
+            using (StreamReader wordReader = new StreamReader(wordFilePath))
+            {
+                string buffer;
+                while ((buffer = wordReader.ReadLine()) != null)
+                {
+                    this.Possibilities.Add(buffer);                    
+                }
+            }
         }
 
         public IEnumerable<string> FilterPossibilities(CharacterStatus[] response, string attempt)
@@ -25,20 +32,20 @@ namespace WordleSolver.Library
                 switch (response[index])
                 {
                     case CharacterStatus.Black:
-                        this.Possibilities = from possibility in this.Possibilities
+                        this.Possibilities = (from possibility in this.Possibilities
                                              where !possibility.Contains(attempt[index])
-                                             select possibility;
+                                             select possibility).ToList();
                         break;
                     case CharacterStatus.Yellow:
-                        this.Possibilities = from possibility in this.Possibilities
+                        this.Possibilities = (from possibility in this.Possibilities
                                              where possibility.Contains(attempt[index]) 
                                              && possibility[index] != attempt[index]
-                                             select possibility;
+                                             select possibility).ToList();
                         break;
                     case CharacterStatus.Green:
-                        this.Possibilities = from possibility in this.Possibilities
+                        this.Possibilities = (from possibility in this.Possibilities
                                              where possibility[index] == attempt[index]
-                                             select possibility;
+                                             select possibility).ToList();
                         break;
                     default:
                         break;
