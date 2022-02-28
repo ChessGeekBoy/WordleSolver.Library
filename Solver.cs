@@ -18,7 +18,7 @@ namespace WordleSolver.Library
             this.Possibilities = JsonSerializer.Deserialize<IEnumerable<string>>(json);
         }
 
-        public IEnumerable<string> FilterPossibilities(Dictionary<int, CharacterStatus> response, string attempt)
+        public IEnumerable<string> FilterPossibilities(CharacterStatus[] response, string attempt)
         {
             for (int index = 0; index < attempt.Length; index++)
             {
