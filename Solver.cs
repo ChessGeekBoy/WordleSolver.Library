@@ -14,15 +14,7 @@ namespace WordleSolver.Library
 
         public Solver(string wordFilePath)
         {
-            Possibilities = new List<string>();
-            using (StreamReader wordReader = new StreamReader(wordFilePath))
-            {
-                string buffer;
-                while ((buffer = wordReader.ReadLine()) != null)
-                {
-                    this.Possibilities.Add(buffer);                    
-                }
-            }
+            this.Possibilities = File.ReadAllText(wordFilePath).Split("\n").ToList<string>();
         }
 
         public IEnumerable<string> FilterPossibilities(CharacterStatus[] response, string attempt)
