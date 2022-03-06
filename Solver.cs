@@ -10,19 +10,11 @@ namespace WordleSolver.Library
 {
     public class Solver
     {
-        public List<string> Possibilities { get; set; }
+        public string[] Possibilities { get; set; }
 
         public Solver(string wordFilePath)
         {
-            Possibilities = new List<string>();
-            using (StreamReader wordReader = new StreamReader(wordFilePath))
-            {
-                string buffer;
-                while ((buffer = wordReader.ReadLine()) != null)
-                {
-                    this.Possibilities.Add(buffer);                    
-                }
-            }
+            this.Possibilities = File.ReadAllLines(wordFilePath);
         }
 
         public IEnumerable<string> FilterPossibilities(CharacterStatus[] response, string attempt)
@@ -34,18 +26,18 @@ namespace WordleSolver.Library
                     case CharacterStatus.Black:
                         this.Possibilities = (from possibility in this.Possibilities
                                              where !possibility.Contains(attempt[index])
-                                             select possibility).ToList();
+                                             select possibility).ToArray();
                         break;
                     case CharacterStatus.Yellow:
                         this.Possibilities = (from possibility in this.Possibilities
                                              where possibility.Contains(attempt[index]) 
                                              && possibility[index] != attempt[index]
-                                             select possibility).ToList();
+                                             select possibility).ToArray();
                         break;
                     case CharacterStatus.Green:
                         this.Possibilities = (from possibility in this.Possibilities
                                              where possibility[index] == attempt[index]
-                                             select possibility).ToList();
+                                             select possibility).ToArray();
                         break;
                     default:
                         break;
