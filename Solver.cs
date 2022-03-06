@@ -12,12 +12,20 @@ namespace WordleSolver.Library
     {
         public string[] Possibilities { get; set; }
 
+        public delegate void Filter(string[] possibilities);
+
+        public event Filter OnFilter;
+
+        public delegate void Solve(string solution);
+
+        public event Solve OnSolve;
+
         public Solver(string wordFilePath)
         {
             this.Possibilities = File.ReadAllLines(wordFilePath);
         }
 
-        public IEnumerable<string> FilterPossibilities(CharacterStatus[] response, string attempt)
+        public void FilterPossibilities(CharacterStatus[] response, string attempt)
         {
             for (int index = 0; index < attempt.Length; index++)
             {
@@ -43,8 +51,16 @@ namespace WordleSolver.Library
                         break;
                 }
             }
-            
-            return this.Possibilities;
+
+            switch (this.Possibilities.Length)
+            {
+                case 1:
+                    this.OnSolve(this.Possibilities.FirstOrDefault());
+                    break;
+                default:
+                    this.OnFilter(this.Possibilities);
+                    break;
+            }
         }
     }
 }
