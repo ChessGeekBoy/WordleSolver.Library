@@ -10,9 +10,9 @@ namespace WordleSolver.Library
 {
     public class Solver
     {
-        public string[] Possibilities { get; set; }
+        public IEnumerable<string> Possibilities { get; set; }
 
-        public delegate void Filter(string[] possibilities);
+        public delegate void Filter(IEnumerable<string> possibilities);
 
         public event Filter OnFilter;
 
@@ -22,7 +22,7 @@ namespace WordleSolver.Library
 
         public Solver(string wordFilePath)
         {
-            this.Possibilities = File.ReadAllLines(wordFilePath);
+            this.Possibilities = File.ReadAllLines(wordFilePath) as IEnumerable<string>;
         }
 
         public void FilterPossibilities(CharacterStatus[] response, string attempt)
@@ -34,18 +34,18 @@ namespace WordleSolver.Library
                     case CharacterStatus.Black:
                         this.Possibilities = (from possibility in this.Possibilities
                                              where !possibility.Contains(attempt[index])
-                                             select possibility).ToArray();
+                                             select possibility);
                         break;
                     case CharacterStatus.Yellow:
                         this.Possibilities = (from possibility in this.Possibilities
                                              where possibility.Contains(attempt[index]) 
                                              && possibility[index] != attempt[index]
-                                             select possibility).ToArray();
+                                             select possibility);
                         break;
                     case CharacterStatus.Green:
                         this.Possibilities = (from possibility in this.Possibilities
                                              where possibility[index] == attempt[index]
-                                             select possibility).ToArray();
+                                             select possibility);
                         break;
                     default:
                         break;
