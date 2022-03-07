@@ -32,27 +32,27 @@ namespace WordleSolver.Library
                 switch (response[index])
                 {
                     case CharacterStatus.Black:
-                        this.Possibilities = (from possibility in this.Possibilities
+                        this.Possibilities = from possibility in this.Possibilities
                                              where !possibility.Contains(attempt[index])
-                                             select possibility);
+                                             select possibility;
                         break;
                     case CharacterStatus.Yellow:
-                        this.Possibilities = (from possibility in this.Possibilities
+                        this.Possibilities = from possibility in this.Possibilities
                                              where possibility.Contains(attempt[index]) 
                                              && possibility[index] != attempt[index]
-                                             select possibility);
+                                             select possibility;
                         break;
                     case CharacterStatus.Green:
-                        this.Possibilities = (from possibility in this.Possibilities
+                        this.Possibilities = from possibility in this.Possibilities
                                              where possibility[index] == attempt[index]
-                                             select possibility);
+                                             select possibility;
                         break;
                     default:
                         break;
                 }
             }
 
-            switch (this.Possibilities.Length)
+            switch (this.Possibilities.Count())
             {
                 case 1:
                     this.OnSolve(this.Possibilities.FirstOrDefault());
